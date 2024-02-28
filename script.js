@@ -4,10 +4,11 @@ var lsib = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
     visHDW = {"opacity":1,"bands":["HDW"],"min":0,"max":80,"palette":["e5f8d2","7ddc1f","ffff00","ffa500","ff2500"]},
     visvs = {"opacity":1,"bands":["vs"],"min":0,"max":350,"palette":["e5f8d2","7ddc1f","ffff00","ffa500","ff2500"]},
     visrh = {"opacity":1,"bands":["rh"],"min":0,"max":120,"palette":["ff2500","ffa500","ffff00","7ddc1f","e5f8d2"]},
-    vislfdi = {"opacity":1,"bands":["LFDI"],"min":20,"max":80,"palette":["e5f8d2","7ddc1f","ffff00","ffa500","ff2500"]},
-    vispr = {"opacity":1,"bands":["sc_pr"],"min":0,"max":80,"palette":["e5f8d2","7ddc1f","ffff00","ffa500","ff2500"]};
+    vispr = {"opacity":1,"bands":["sc_pr"],"min":0,"max":80,"palette":["e5f8d2","7ddc1f","ffff00","ffa500","ff2500"]},
+    vislfdi = {"opacity":1,"bands":["LFDI"],"min":20,"max":70,"palette":["e5f8d2","7ddc1f","ffff00","ffa500","ff2500"]};
 
 //---------------------------------------------------------General Functions
+
 //function to remove layers from map
 function removelay(){
   var lay = Map.layers().get(0);
@@ -20,7 +21,7 @@ function removelay(){
 //Vapor pressure deficit scaling
 function scaleVPD(img){
   var scVPD = img.expression(
-    'vpd*0.1', 
+    'vpd*0.01', 
     {
      'vpd': img.select('vpd')
     }
@@ -45,7 +46,7 @@ function addHDW(img){
 //Mean temperature estimation (with temperature scaling)
 function addT(img){
   var T = img.expression(
-    '((Tmin*0.1)+(Tmax*0.1))/2', 
+    '((Tmax*0.1)+(Tmin*0.1))/2', 
     {
      'Tmin': img.select('tmmn'),
      'Tmax': img.select('tmmx')
@@ -58,7 +59,7 @@ function addT(img){
 //Calculation of saturated vapor pressure from Tetens equation
 function addes(img){
   var es = img.expression(
-    '6.1078*exp((17.269 *T)/(237.3+T))', 
+    '0.61078*exp((17.269 *T)/(237.3+T))', 
     {
      'T': img.select('Temp')
     }
@@ -121,7 +122,7 @@ function addwf(img){
 function scalepr(img){
  var unsc_pr = img.select('pr').rename('sc_pr');
  var sc_pr = unsc_pr
-  .where(unsc_pr.gt(66),66);
+  .where(unsc_pr.gt(100),100);
   
   return img.addBands(sc_pr);
 }
@@ -129,7 +130,7 @@ function scalepr(img){
 //Calculation of RDF parameter of LFDI index 
 function addrcf(img){
   var rcf = img.expression(
-    '0.62-0.0342*p+0.000609*(p**2)-0.000004*(p**3)+0.1761*10-0.01141*(10**2)+0.000279*(10**3)', 
+    '0.62-(0.0342*p)+0.000609*(p**2)-0.000004*(p**3)+0.1761*10-0.01141*(10**2)+0.000279*(10**3)', 
     {
      'p': img.select('sc_pr')
     }
@@ -141,7 +142,7 @@ function addrcf(img){
   //Calculation of LFDI index   
 function addLFDI(img){
   var LFDI = img.expression(
-    '((bi+wf)*rcf)+7', 
+    '((bi+wf)*rcf)', 
     {
      'wf': img.select('wf'),
      'bi': img.select('bi'),
