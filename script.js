@@ -1,7 +1,7 @@
 var lsib = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
     terra = ee.ImageCollection("IDAHO_EPSCOR/TERRACLIMATE"),
     visVPD = {"opacity":1,"bands":["vpd_sc"],"min":0,"max":30,"palette":["e5f8d2","7ddc1f","ffff00","ffa500","ff2500"]},
-    visHDW = {"opacity":1,"bands":["HDW"],"min":0,"max":80,"palette":["e5f8d2","7ddc1f","ffff00","ffa500","ff2500"]},
+    visHDW = {"opacity":1,"bands":["HDW"],"min":0,"max":8,"palette":["e5f8d2","7ddc1f","ffff00","ffa500","ff2500"]},
     visvs = {"opacity":1,"bands":["vs"],"min":0,"max":350,"palette":["e5f8d2","7ddc1f","ffff00","ffa500","ff2500"]},
     visrh = {"opacity":1,"bands":["rh"],"min":0,"max":120,"palette":["ff2500","ffa500","ffff00","7ddc1f","e5f8d2"]},
     vispr = {"opacity":1,"bands":["sc_pr"],"min":0,"max":80,"palette":["e5f8d2","7ddc1f","ffff00","ffa500","ff2500"]},
