@@ -160,7 +160,7 @@ function clipAOI(img){
 
 //Area of interest definition
 var Greece = lsib.filter(ee.Filter.eq('country_na','Greece'));
-
+Map.centerObject(Greece);
 //Dataset subseting and caluculation of parameters
 var terra_subset = terra.filter(ee.Filter.calendarRange(2018,2023,'year'))
   .filter(ee.Filter.calendarRange(5,9,'month'))
